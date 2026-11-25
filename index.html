@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Mission Briefing — Video Homework</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        body: ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        dossier: '#f3f7f5'
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-dossier bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:22px_22px] text-slate-800 font-body antialiased min-h-screen py-6 px-4 sm:py-10 sm:px-6">
+
+    <!-- Floating Incomplete Warning Toast -->
+    <div
+        id="incomplete-toast"
+        role="alert"
+        aria-live="assertive"
+        class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-md bg-rose-600 text-white rounded-2xl shadow-xl shadow-rose-900/25 px-5 py-4 flex items-center justify-between gap-3 border border-rose-400/70"
+    >
+        <div class="flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0 text-lg">
+                ⚠️
+            </span>
+            <div>
+                <p class="font-sans font-extrabold text-sm sm:text-base leading-snug">Oops, ти ще не все виконав</p>
+                <p id="toast-detail" class="text-xs text-rose-100 mt-0.5">Заповни всі підсвічені червоним пункти та спробуй ще раз.</p>
+            </div>
+        </div>
+        <button
+            type="button"
+            id="close-toast-btn"
+            aria-label="Close warning"
+            class="p-2 rounded-xl hover:bg-white/15 transition shrink-0"
+        >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Main Centered Container -->
+    <div class="max-w-3xl mx-auto space-y-6 sm:space-y-8">
+
+        <!-- Header Card: Spy Dossier / Emerald-Jade Theme -->
+        <header class="bg-white rounded-3xl shadow-md shadow-emerald-950/5 border border-emerald-900/10 overflow-hidden">
+            <div class="relative bg-[linear-gradient(135deg,#064e3b_0%,#047857_55%,#059669_100%)] px-6 py-7 sm:px-8 sm:py-9 text-white overflow-hidden">
+                <!-- Decorative Dossier Accents -->
+                <div class="pointer-events-none absolute -top-14 -right-14 w-48 h-48 rounded-full bg-amber-400/10"></div>
+                <div class="pointer-events-none absolute -bottom-16 right-20 w-36 h-36 rounded-full bg-white/10"></div>
+
+                <div class="relative z-10">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-bold tracking-wider uppercase mb-3">
+                        <span>📁</span>
+                        <span>Top Secret • Video Assignment</span>
+                    </div>
+                    <h1 class="font-sans text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight">
+                        🕵️ Mission Briefing: Video Homework
+                    </h1>
+                    <p class="text-emerald-50/95 mt-2 text-sm sm:text-base max-w-xl">
+                        Watch the clip and complete all four tasks.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Student Name Section -->
+            <div id="name-card-wrap" class="p-6 sm:px-8 sm:py-6 bg-white transition-colors">
+                <label for="studentName" class="block text-sm font-bold text-slate-800 mb-2">
+                    Your Name / Твоє ім'я <span class="text-rose-600">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="studentName"
+                    name="studentName"
+                    placeholder="Enter your first and last name..."
+                    autocomplete="name"
+                    class="w-full sm:max-w-md px-4 py-3 rounded-xl border border-slate-300 bg-slate-50/70 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 focus:bg-white transition"
+                >
+                <p id="name-error" class="hidden mt-2 text-xs font-semibold text-rose-600 flex items-center gap-1.5">
+                    <span>⚠️</span>
+                    <span>Please enter your name before submitting.</span>
+                </p>
+            </div>
+        </header>
+
+        <!-- Embedded Video Card -->
+        <section class="bg-white rounded-3xl shadow-sm border border-emerald-900/10 p-5 sm:p-7 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-2xl bg-emerald-900 text-amber-400 flex items-center justify-center shrink-0 shadow-sm">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"></path>
+                        </svg>
+                    </span>
+                    <div>
+                        <h2 class="font-sans text-lg font-extrabold text-slate-900">Watch the Video Clip</h2>
+                        <p class="text-xs sm:text-sm text-slate-500">You can watch the clip as many times as you need.</p>
+                    </div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800">
+                    🎬 Spy Briefing
+                </span>
+            </div>
+
+            <!-- Responsive 16:9 YouTube Embed -->
+            <div class="relative w-full overflow-hidden rounded-2xl bg-slate-900 shadow-inner ring-1 ring-slate-900/10 aspect-video">
+                <iframe
+                    class="w-full h-full border-0"
+                    src="https://www.youtube.com/embed/zFDLpmGfxtU"
+                    title="Spy Briefing Video"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen
+                ></iframe>
+            </div>
+
+            <!-- Fallback Link -->
+            <div class="flex items-center justify-end">
+                <a
+                    href="https://www.youtube.com/watch?v=zFDLpmGfxtU"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-xs sm:text-sm font-semibold text-emerald-800 transition"
+                >
+                    <span>Video not playing? Open on YouTube ↗</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Collapsible Grammar Help Panel -->
+        <section class="bg-white rounded-3xl shadow-sm border border-emerald-200/90 overflow-hidden">
+            <button
+                type="button"
+                id="grammar-help-toggle"
+                aria-expanded="false"
+                aria-controls="grammar-help-panel"
+                class="w-full px-6 py-4 sm:px-8 sm:py-5 flex items-center justify-between gap-4 text-left bg-emerald-50/80 hover:bg-emerald-50 transition cursor-pointer"
+            >
+                <div class="flex items-center gap-3.5">
+                    <span class="w-10 h-10 rounded-2xl bg-emerald-700 text-amber-300 flex items-center justify-center shrink-0 shadow-sm text-lg">
+                        📘
+                    </span>
+                    <div>
+                        <span class="block font-sans text-base sm:text-lg font-extrabold text-slate-900">Grammar Help: Modals of Deduction</span>
+                        <span class="block text-xs sm:text-sm text-slate-600">Click to open or close the quick guide for must, can't, and might</span>
+                    </div>
+                </div>
+                <svg id="grammar-help-chevron" class="w-5 h-5 text-emerald-700 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+
+            <div id="grammar-help-panel" class="hidden border-t border-emerald-100 p-6 sm:p-8 bg-white">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- must -->
+                    <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                <span class="font-sans text-base font-extrabold text-emerald-900">must</span>
+                                <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-200/80 text-emerald-900">90–100% sure</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-600">
+                                Use when you are almost certain something is <strong>true</strong>.
+                            </p>
+                        </div>
+                        <p class="text-xs font-semibold text-emerald-900 mt-3 bg-white rounded-xl px-3 py-2 border border-emerald-100">
+                            "He has holograms and nano-charges. He <span class="underline decoration-emerald-600 decoration-2">must</span> be a pro!"
+                        </p>
+                    </div>
+
+                    <!-- can't -->
+                    <div class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                <span class="font-sans text-base font-extrabold text-rose-900">can't</span>
+                                <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-200/80 text-rose-900">90–100% impossible</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-600">
+                                Use when you are almost certain something is <strong>impossible</strong>.
+                            </p>
+                        </div>
+                        <p class="text-xs font-semibold text-rose-900 mt-3 bg-white rounded-xl px-3 py-2 border border-rose-100">
+                            "It only uses fruit and a rock — it <span class="underline decoration-rose-500 decoration-2">can't</span> be high-tech!"
+                        </p>
+                    </div>
+
+                    <!-- might -->
+                    <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                <span class="font-sans text-base font-extrabold text-amber-900">might</span>
+                                <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-200/80 text-amber-950">~50% possible</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-600">
+                                Use when something is <strong>possible</strong>, but you are not sure.
+                            </p>
+                        </div>
+                        <p class="text-xs font-semibold text-amber-950 mt-3 bg-white rounded-xl px-3 py-2 border border-amber-100">
+                            "Something <span class="underline decoration-amber-500 decoration-2">might</span> go wrong."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Homework Form -->
+        <form id="homework-form" class="space-y-6 sm:space-y-8" novalidate>
+
+            <!-- ========================================== -->
+            <!-- TASK 1: FIRST WATCH — TRUE OR FALSE        -->
+            <!-- ========================================== -->
+            <section class="bg-white rounded-3xl shadow-sm border border-emerald-900/10 p-6 sm:p-8 space-y-5">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div class="flex-1 min-w-[220px]">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Task 1 of 4</span>
+                        <h2 class="font-sans text-xl font-extrabold text-slate-900 mt-0.5">First Watch — True or False</h2>
+                        <p class="text-sm text-slate-600 mt-1">Watch the video for the first time and decide whether each statement about the spy briefing is True (T) or False (F). Click True or False.</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button
+                            type="button"
+                            data-hint-target="hint-task-1"
+                            class="hint-toggle-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-100 text-amber-950 hover:bg-amber-200 active:scale-95 transition"
+                        >
+                            <span>💡</span>
+                            <span>Hint</span>
+                        </button>
+                        <span id="task1-score-badge" class="hidden px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900"></span>
+                    </div>
+                </div>
+
+                <!-- Ukrainian Hint -->
+                <div id="hint-task-1" class="hidden rounded-2xl bg-amber-50 border border-amber-300 px-4 py-3 text-sm text-amber-950 flex items-start gap-2.5">
+                    <span class="text-base shrink-0">💡</span>
+                    <p>Подивись відео перший раз і визнач, які факти про шпигунський брифінг є правдою (T), а які — брехнею (F). Натисни True або False.</p>
+                </div>
+
+                <div id="task1-container" class="space-y-3.5"></div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TASK 2: THE HIGH-TECH PLAN (MC)            -->
+            <!-- ========================================== -->
+            <section class="bg-white rounded-3xl shadow-sm border border-emerald-900/10 p-6 sm:p-8 space-y-5">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div class="flex-1 min-w-[220px]">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Task 2 of 4</span>
+                        <h2 class="font-sans text-xl font-extrabold text-slate-900 mt-0.5">The High-Tech Plan (Multiple Choice)</h2>
+                        <p class="text-sm text-slate-600 mt-1">Watch the clip again and choose the correct answer for each question.</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button
+                            type="button"
+                            data-hint-target="hint-task-2"
+                            class="hint-toggle-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-100 text-amber-950 hover:bg-amber-200 active:scale-95 transition"
+                        >
+                            <span>💡</span>
+                            <span>Hint</span>
+                        </button>
+                        <span id="task2-score-badge" class="hidden px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900"></span>
+                    </div>
+                </div>
+
+                <!-- Ukrainian Hint -->
+                <div id="hint-task-2" class="hidden rounded-2xl bg-amber-50 border border-amber-300 px-4 py-3 text-sm text-amber-950 flex items-start gap-2.5">
+                    <span class="text-base shrink-0">💡</span>
+                    <p>Подивись фрагмент ще раз і обери правильний варіант відповіді.</p>
+                </div>
+
+                <div id="task2-container" class="space-y-4"></div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TASK 3: AGENT'S EARS (MODALS CHECK)        -->
+            <!-- ========================================== -->
+            <section class="bg-white rounded-3xl shadow-sm border border-emerald-900/10 p-6 sm:p-8 space-y-5">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div class="flex-1 min-w-[220px]">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Task 3 of 4</span>
+                        <h2 class="font-sans text-xl font-extrabold text-slate-900 mt-0.5">Agent's Ears (Vocabulary &amp; Modals Check)</h2>
+                        <p class="text-sm text-slate-600 mt-1">Complete the spy deductions about the video. Choose <strong>must</strong>, <strong>can't</strong>, or <strong>might</strong> for each sentence.</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button
+                            type="button"
+                            data-hint-target="hint-task-3"
+                            class="hint-toggle-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-100 text-amber-950 hover:bg-amber-200 active:scale-95 transition"
+                        >
+                            <span>💡</span>
+                            <span>Hint</span>
+                        </button>
+                        <span id="task3-score-badge" class="hidden px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900"></span>
+                    </div>
+                </div>
+
+                <!-- Ukrainian Hint -->
+                <div id="hint-task-3" class="hidden rounded-2xl bg-amber-50 border border-amber-300 px-4 py-3 text-sm text-amber-950 flex items-start gap-2.5">
+                    <span class="text-base shrink-0">💡</span>
+                    <p>Поєднай ситуації з відео з правильними шпигунськими висновками. Обери <strong>must</strong>, <strong>can't</strong> або <strong>might</strong>.</p>
+                </div>
+
+                <div id="task3-container" class="space-y-4"></div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TASK 4: QUICK DEBRIEF (OPEN-ENDED)         -->
+            <!-- ========================================== -->
+            <section class="bg-white rounded-3xl shadow-sm border border-emerald-900/10 p-6 sm:p-8 space-y-5">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div class="flex-1 min-w-[220px]">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Task 4 of 4</span>
+                        <h2 class="font-sans text-xl font-extrabold text-slate-900 mt-0.5">🎙️ Quick Debrief</h2>
+                        <p class="text-sm text-slate-600 mt-1">Write your own answers to the questions below in English. Your teacher will check this part manually.</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button
+                            type="button"
+                            data-hint-target="hint-task-4"
+                            class="hint-toggle-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-amber-100 text-amber-950 hover:bg-amber-200 active:scale-95 transition"
+                        >
+                            <span>💡</span>
+                            <span>Hint</span>
+                        </button>
+                        <span id="task4-status-badge" class="hidden px-3 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-950">
+                            Sent to teacher for review
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Ukrainian Hint -->
+                <div id="hint-task-4" class="hidden rounded-2xl bg-amber-50 border border-amber-300 px-4 py-3 text-sm text-amber-950 flex items-start gap-2.5">
+                    <span class="text-base shrink-0">💡</span>
+                    <p>Напиши відповіді на запитання самостійно англійською. Цю частину вчитель перевірить особисто.</p>
+                </div>
+
+                <div id="task4-container" class="space-y-4"></div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- SUBMISSION & RESULTS SECTION               -->
+            <!-- ========================================== -->
+            <section class="bg-white rounded-3xl shadow-sm border border-emerald-900/10 p-6 sm:p-8 space-y-5">
+                <!-- Inline Incomplete Warning Banner -->
+                <div id="inline-incomplete-banner" class="hidden rounded-2xl bg-rose-50 border-2 border-rose-400 p-4 flex items-center gap-3 text-rose-900">
+                    <span class="text-xl shrink-0">⚠️</span>
+                    <div>
+                        <p class="font-sans font-extrabold text-sm sm:text-base">Oops, ти ще не все виконав</p>
+                        <p id="inline-incomplete-detail" class="text-xs sm:text-sm text-rose-700 mt-0.5"></p>
+                    </div>
+                </div>
+
+                <!-- Required Ukrainian Warning Above Submit Button -->
+                <div class="rounded-2xl bg-amber-50 border border-amber-300/90 p-4 flex items-start gap-3">
+                    <svg class="w-5 h-5 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-sm sm:text-base font-semibold text-amber-950">
+                        Перевір точність своїх відповідей ще раз перед надсиланням вчителю
+                    </p>
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                    type="submit"
+                    id="submit-btn"
+                    class="w-full py-4 px-6 rounded-2xl bg-[linear-gradient(135deg,#064e3b_0%,#047857_60%,#059669_100%)] hover:brightness-110 active:scale-[0.99] text-white font-sans font-bold text-base sm:text-lg shadow-lg shadow-emerald-900/20 transition flex items-center justify-center gap-2.5 disabled:opacity-65 disabled:cursor-not-allowed"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    <span id="submit-btn-text">Надіслати вчителю</span>
+                </button>
+
+                <!-- Results Summary Card -->
+                <div id="result-banner" class="hidden rounded-2xl p-5 sm:p-6 border transition-all space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <h3 id="result-title" class="font-sans text-lg font-extrabold"></h3>
+                            <p id="result-message" class="text-sm mt-1"></p>
+                            <p class="text-xs font-semibold text-slate-600 mt-2">
+                                🎙️ Task 4 (Quick Debrief): Sent to teacher for review.
+                            </p>
+                        </div>
+                        <div class="shrink-0 bg-white rounded-2xl px-5 py-3 text-center border border-black/10 shadow-sm">
+                            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Auto-Graded Score</div>
+                            <div id="result-score" class="font-sans text-2xl font-extrabold text-emerald-800 mt-0.5">0 / 14</div>
+                            <div id="result-percent" class="text-xs font-bold text-amber-600">0%</div>
+                        </div>
+                    </div>
+
+                    <div id="result-breakdown" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t border-black/10 text-xs"></div>
+                </div>
+            </section>
+
+        </form>
+
+        <footer class="text-center text-xs text-slate-400 pb-6">
+            Mission Briefing — Video Homework
+        </footer>
+    </div>
+
+    <script>
+        // ==========================================
+        // TELEGRAM BOT CONFIGURATION
+        // ==========================================
+        const BOT_TOKEN = "9000524592:AAFGz0I36Xc4XS2Y4qyNMfQzaxaWZMkLxGU";
+        const CHAT_ID = "749833850";
+
+        // ==========================================
+        // TASK DATA & ANSWER KEYS
+        // ==========================================
+
+        // Task 1: True or False (6 points)
+        const task1Data = [
+            {
+                id: 1,
+                statement: "At the beginning, Skipper uses a rock and fruit to explain his rescue plan.",
+                correct: "T"
+            },
+            {
+                id: 2,
+                statement: "Agent Classified thinks Skipper's plan is brilliant and wants to use it right away.",
+                correct: "F"
+            },
+            {
+                id: 3,
+                statement: "The North Wind team uses high-tech glasses and holograms to show their plan.",
+                correct: "T"
+            },
+            {
+                id: 4,
+                statement: "According to Classified's plan, the penguins have to distract the octopi.",
+                correct: "T"
+            },
+            {
+                id: 5,
+                statement: "Agent Classified says he has lost many members of his team in the past.",
+                correct: "F"
+            },
+            {
+                id: 6,
+                statement: "In the end, Skipper decides that his team should follow Agent Classified's orders.",
+                correct: "T"
+            }
+        ];
+
+        // Task 2: Multiple Choice (4 points)
+        const task2Data = [
+            {
+                id: 1,
+                question: "Who represents Private in Skipper's simple plan?",
+                options: [
+                    { key: "a", text: "A small toy penguin" },
+                    { key: "b", text: "A rock" },
+                    { key: "c", text: "A hologram" }
+                ],
+                correct: "b"
+            },
+            {
+                id: 2,
+                question: "What is Short Fuse's job at 22:00 in the North Wind's plan?",
+                options: [
+                    { key: "a", text: "To hack the surveillance cameras" },
+                    { key: "b", text: "To distract the guards with a joke" },
+                    { key: "c", text: "To breach the ship's hull with underwater nano-charges" }
+                ],
+                correct: "c"
+            },
+            {
+                id: 3,
+                question: "What happens at the end of Classified's hologram presentation (at 22:09)?",
+                options: [
+                    { key: "a", text: "There is a huge explosion while Classified calmly walks away" },
+                    { key: "b", text: "The penguins steal Dave's submarine" },
+                    { key: "c", text: "The alarm turns on and the team escapes" }
+                ],
+                correct: "a"
+            },
+            {
+                id: 4,
+                question: "Why does Skipper suddenly agree that Classified's plan is better?",
+                options: [
+                    { key: "a", text: "Because he likes the 3D glasses" },
+                    { key: "b", text: "Because he feels guilty about losing Private during their earlier operation in Shanghai" },
+                    { key: "c", text: "Because Kowalski tells him to surrender" }
+                ],
+                correct: "b"
+            }
+        ];
+
+        // Task 3: Modals of Deduction (4 points)
+        const task3Data = [
+            {
+                id: 1,
+                before: "Agent Classified has never lost a teammate, so he tells Skipper: losing a member of your team",
+                after: "feel awful.",
+                correct: "must"
+            },
+            {
+                id: 2,
+                before: "Skipper's plan only uses fruit and a rock — it",
+                after: "be a high-tech spy operation!",
+                correct: "can't"
+            },
+            {
+                id: 3,
+                before: "Kowalski doesn't trust the North Wind team; he thinks the penguins",
+                after: "not need their help.",
+                correct: "might"
+            },
+            {
+                id: 4,
+                before: "Classified has a huge team, holograms, and nano-charges. He",
+                after: "be a professional secret agent.",
+                correct: "must"
+            }
+        ];
+
+        const modalChoices = ["must", "can't", "might"];
+
+        // Task 4: Quick Debrief (3 open-ended questions)
+        const task4Data = [
+            {
+                id: 1,
+                question: "Whose plan would you trust more in a real spy mission: Skipper's improvised plan or Agent Classified's high-tech plan? Why?"
+            },
+            {
+                id: 2,
+                question: "Look at Agent Classified's behavior. What must he think about the penguins? (e.g. \"He must think they are crazy / amateurs!\")"
+            },
+            {
+                id: 3,
+                question: "Do you think the North Wind's plan will work smoothly, or might something go wrong?"
+            }
+        ];
+
+        // ==========================================
+        // APPLICATION STATE
+        // ==========================================
+        const task1State = {};
+        const task2State = {};
+        const task3State = {};
+        let isSubmittedAndLocked = false;
+        let lastPreparedReport = null;
+        let toastTimer = null;
+
+        // ==========================================
+        // UI HELPER FUNCTIONS
+        // ==========================================
+
+        function markMissing(el) {
+            el.classList.add("border-rose-500", "ring-2", "ring-rose-300", "bg-rose-50/70");
+        }
+
+        function clearMissing(el) {
+            el.classList.remove("border-rose-500", "ring-2", "ring-rose-300", "bg-rose-50/70");
+        }
+
+        function showIncompleteWarning(missingCount) {
+            const detailMsg = "Залишилось заповнити: " + missingCount + " полів/завдань.";
+            const toast = document.getElementById("incomplete-toast");
+            const toastDetail = document.getElementById("toast-detail");
+            const inlineBanner = document.getElementById("inline-incomplete-banner");
+            const inlineDetail = document.getElementById("inline-incomplete-detail");
+
+            toastDetail.textContent = detailMsg;
+            inlineDetail.textContent = detailMsg;
+            toast.classList.remove("hidden");
+            inlineBanner.classList.remove("hidden");
+
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add("hidden");
+            }, 5000);
+        }
+
+        function hideIncompleteWarning() {
+            document.getElementById("incomplete-toast").classList.add("hidden");
+            document.getElementById("inline-incomplete-banner").classList.add("hidden");
+        }
+
+        function showScoreBadge(elId, score, total) {
+            const badge = document.getElementById(elId);
+            if (!badge) return;
+            badge.textContent = score + " / " + total;
+            badge.classList.remove("hidden");
+        }
+
+        function setCardGradeStyle(card, isCorrect) {
+            card.classList.remove(
+                "border-slate-200", "bg-slate-50/60",
+                "border-rose-500", "ring-2", "ring-rose-300", "bg-rose-50/70",
+                "border-emerald-500", "bg-emerald-50/60"
+            );
+            if (isCorrect) {
+                card.classList.add("border-emerald-500", "bg-emerald-50/60");
+            } else {
+                card.classList.add("border-rose-500", "bg-rose-50/60");
+            }
+        }
+
+        // ==========================================
+        // RENDER FUNCTIONS
+        // ==========================================
+
+        function renderTask1() {
+            const container = document.getElementById("task1-container");
+            container.innerHTML = "";
+
+            task1Data.forEach((item) => {
+                const card = document.createElement("div");
+                card.id = "t1-card-" + item.id;
+                card.className = "p-4 rounded-2xl border border-slate-200 bg-slate-50/60 transition-all space-y-3";
+
+                const row = document.createElement("div");
+                row.className = "flex flex-col sm:flex-row sm:items-center justify-between gap-3";
+
+                const text = document.createElement("p");
+                text.className = "text-sm sm:text-base font-medium text-slate-800 leading-snug";
+                text.textContent = item.id + ". " + item.statement;
+
+                const btnGroup = document.createElement("div");
+                btnGroup.className = "flex items-center gap-2 shrink-0";
+
+                [
+                    { val: "T", label: "True" },
+                    { val: "F", label: "False" }
+                ].forEach((choice) => {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.dataset.qId = String(item.id);
+                    btn.dataset.val = choice.val;
+                    btn.className = "t1-btn flex-1 sm:flex-none min-w-[84px] px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:border-emerald-500 hover:bg-emerald-50/60 text-sm font-bold text-slate-700 transition active:scale-95";
+                    btn.textContent = choice.label;
+                    btn.addEventListener("click", () => {
+                        if (isSubmittedAndLocked) return;
+                        selectTask1(item.id, choice.val);
+                    });
+                    btnGroup.appendChild(btn);
+                });
+
+                row.appendChild(text);
+                row.appendChild(btnGroup);
+
+                const feedback = document.createElement("p");
+                feedback.id = "t1-fb-" + item.id;
+                feedback.className = "hidden text-xs font-bold";
+
+                card.appendChild(row);
+                card.appendChild(feedback);
+                container.appendChild(card);
+            });
+        }
+
+        function selectTask1(qId, val) {
+            task1State[qId] = val;
+            const card = document.getElementById("t1-card-" + qId);
+            clearMissing(card);
+
+            card.querySelectorAll(".t1-btn").forEach((btn) => {
+                const isSelected = btn.dataset.val === val;
+                if (isSelected) {
+                    btn.className = "t1-btn flex-1 sm:flex-none min-w-[84px] px-4 py-2.5 rounded-xl border-2 border-emerald-700 bg-emerald-700 text-white text-sm font-bold shadow-sm transition";
+                } else {
+                    btn.className = "t1-btn flex-1 sm:flex-none min-w-[84px] px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:border-emerald-500 hover:bg-emerald-50/60 text-sm font-bold text-slate-700 transition active:scale-95";
+                }
+            });
+        }
+
+        function renderTask2() {
+            const container = document.getElementById("task2-container");
+            container.innerHTML = "";
+
+            task2Data.forEach((item) => {
+                const card = document.createElement("div");
+                card.id = "t2-card-" + item.id;
+                card.className = "p-4 sm:p-5 rounded-2xl border border-slate-200 bg-slate-50/60 transition-all space-y-3";
+
+                const qText = document.createElement("p");
+                qText.className = "font-semibold text-slate-900 text-sm sm:text-base leading-snug";
+                qText.textContent = item.id + ". " + item.question;
+                card.appendChild(qText);
+
+                const optsWrap = document.createElement("div");
+                optsWrap.className = "space-y-2";
+
+                item.options.forEach((opt) => {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.dataset.qId = String(item.id);
+                    btn.dataset.optKey = opt.key;
+                    btn.className = "t2-opt w-full text-left px-4 py-3 rounded-xl border border-slate-200 bg-white hover:border-emerald-500 hover:bg-emerald-50/50 text-sm font-medium text-slate-700 transition flex items-center gap-3 active:scale-[0.99]";
+
+                    const badge = document.createElement("span");
+                    badge.className = "opt-badge w-7 h-7 rounded-lg bg-slate-100 text-slate-600 font-bold text-xs uppercase flex items-center justify-center shrink-0 transition";
+                    badge.textContent = opt.key;
+
+                    const label = document.createElement("span");
+                    label.className = "leading-snug";
+                    label.textContent = opt.text;
+
+                    btn.appendChild(badge);
+                    btn.appendChild(label);
+                    btn.addEventListener("click", () => {
+                        if (isSubmittedAndLocked) return;
+                        selectTask2(item.id, opt.key);
+                    });
+                    optsWrap.appendChild(btn);
+                });
+
+                card.appendChild(optsWrap);
+
+                const feedback = document.createElement("p");
+                feedback.id = "t2-fb-" + item.id;
+                feedback.className = "hidden text-xs font-bold";
+                card.appendChild(feedback);
+
+                container.appendChild(card);
+            });
+        }
+
+        function selectTask2(qId, optKey) {
+            task2State[qId] = optKey;
+            const card = document.getElementById("t2-card-" + qId);
+            clearMissing(card);
+
+            card.querySelectorAll(".t2-opt").forEach((btn) => {
+                const isSelected = btn.dataset.optKey === optKey;
+                const badge = btn.querySelector(".opt-badge");
+                if (isSelected) {
+                    btn.className = "t2-opt w-full text-left px-4 py-3 rounded-xl border-2 border-emerald-700 bg-emerald-50 text-sm font-semibold text-emerald-950 transition flex items-center gap-3 shadow-sm";
+                    badge.className = "opt-badge w-7 h-7 rounded-lg bg-emerald-700 text-white font-bold text-xs uppercase flex items-center justify-center shrink-0 transition";
+                } else {
+                    btn.className = "t2-opt w-full text-left px-4 py-3 rounded-xl border border-slate-200 bg-white hover:border-emerald-500 hover:bg-emerald-50/50 text-sm font-medium text-slate-700 transition flex items-center gap-3 active:scale-[0.99]";
+                    badge.className = "opt-badge w-7 h-7 rounded-lg bg-slate-100 text-slate-600 font-bold text-xs uppercase flex items-center justify-center shrink-0 transition";
+                }
+            });
+        }
+
+        function renderTask3() {
+            const container = document.getElementById("task3-container");
+            container.innerHTML = "";
+
+            task3Data.forEach((item) => {
+                const card = document.createElement("div");
+                card.id = "t3-card-" + item.id;
+                card.className = "p-4 sm:p-5 rounded-2xl border border-slate-200 bg-slate-50/60 transition-all space-y-3.5";
+
+                // Sentence with live visual blank
+                const sentence = document.createElement("p");
+                sentence.className = "text-sm sm:text-base text-slate-800 leading-relaxed";
+
+                const numSpan = document.createElement("span");
+                numSpan.className = "font-bold text-emerald-800 mr-1";
+                numSpan.textContent = item.id + ".";
+
+                const beforeText = document.createTextNode(" " + item.before + " ");
+
+                const blankSlot = document.createElement("span");
+                blankSlot.id = "t3-blank-" + item.id;
+                blankSlot.className = "inline-flex items-center justify-center min-w-[78px] px-3 py-0.5 mx-1 rounded-lg border-2 border-dashed border-amber-400 bg-amber-50/70 text-amber-800 font-extrabold text-sm align-baseline transition";
+                blankSlot.textContent = "______";
+
+                const afterText = document.createTextNode(" " + item.after);
+
+                sentence.appendChild(numSpan);
+                sentence.appendChild(beforeText);
+                sentence.appendChild(blankSlot);
+                sentence.appendChild(afterText);
+                card.appendChild(sentence);
+
+                // Choice pills: must | can't | might
+                const pillsRow = document.createElement("div");
+                pillsRow.className = "flex flex-wrap items-center gap-2";
+
+                modalChoices.forEach((word) => {
+                    const pill = document.createElement("button");
+                    pill.type = "button";
+                    pill.dataset.qId = String(item.id);
+                    pill.dataset.word = word;
+                    pill.className = "t3-pill px-4 py-2 rounded-xl border border-slate-300 bg-white hover:border-emerald-600 hover:bg-emerald-50 text-sm font-bold text-slate-700 transition active:scale-95";
+                    pill.textContent = word;
+                    pill.addEventListener("click", () => {
+                        if (isSubmittedAndLocked) return;
+                        selectTask3(item.id, word);
+                    });
+                    pillsRow.appendChild(pill);
+                });
+
+                card.appendChild(pillsRow);
+
+                const feedback = document.createElement("p");
+                feedback.id = "t3-fb-" + item.id;
+                feedback.className = "hidden text-xs font-bold";
+                card.appendChild(feedback);
+
+                container.appendChild(card);
+            });
+        }
+
+        function selectTask3(qId, word) {
+            task3State[qId] = word;
+            const card = document.getElementById("t3-card-" + qId);
+            const blankSlot = document.getElementById("t3-blank-" + qId);
+            clearMissing(card);
+
+            blankSlot.textContent = word;
+            blankSlot.className = "inline-flex items-center justify-center min-w-[78px] px-3 py-0.5 mx-1 rounded-lg border-2 border-emerald-600 bg-emerald-600 text-white font-extrabold text-sm align-baseline shadow-sm transition";
+
+            card.querySelectorAll(".t3-pill").forEach((pill) => {
+                const isSelected = pill.dataset.word === word;
+                if (isSelected) {
+                    pill.className = "t3-pill px-4 py-2 rounded-xl border-2 border-emerald-700 bg-emerald-700 text-white text-sm font-bold shadow-sm transition";
+                } else {
+                    pill.className = "t3-pill px-4 py-2 rounded-xl border border-slate-300 bg-white hover:border-emerald-600 hover:bg-emerald-50 text-sm font-bold text-slate-700 transition active:scale-95";
+                }
+            });
+        }
+
+        function renderTask4() {
+            const container = document.getElementById("task4-container");
+            container.innerHTML = "";
+
+            task4Data.forEach((item) => {
+                const card = document.createElement("div");
+                card.id = "t4-card-" + item.id;
+                card.className = "p-4 sm:p-5 rounded-2xl border border-slate-200 bg-slate-50/60 transition-all space-y-2.5";
+
+                const label = document.createElement("label");
+                label.htmlFor = "t4-input-" + item.id;
+                label.className = "block text-sm sm:text-base font-semibold text-slate-800 leading-snug";
+                label.textContent = item.id + ". " + item.question;
+
+                const textarea = document.createElement("textarea");
+                textarea.id = "t4-input-" + item.id;
+                textarea.rows = 3;
+                textarea.placeholder = "Write your answer in English here...";
+                textarea.className = "t4-textarea w-full p-3.5 rounded-xl border border-slate-300 bg-white text-sm sm:text-base text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 transition resize-y";
+
+                textarea.addEventListener("input", () => {
+                    if (textarea.value.trim()) {
+                        clearMissing(card);
+                        clearMissing(textarea);
+                    }
+                });
+
+                card.appendChild(label);
+                card.appendChild(textarea);
+                container.appendChild(card);
+            });
+        }
+
+        // ==========================================
+        // STRICT VALIDATION (ALL FIELDS REQUIRED)
+        // ==========================================
+
+        function validateAll() {
+            const missingElements = [];
+
+            // 1. Student Name
+            const nameInput = document.getElementById("studentName");
+            const nameError = document.getElementById("name-error");
+            clearMissing(nameInput);
+            nameError.classList.add("hidden");
+
+            if (!nameInput.value.trim()) {
+                markMissing(nameInput);
+                nameError.classList.remove("hidden");
+                missingElements.push(nameInput);
+            }
+
+            // 2. Task 1 (6 T/F)
+            task1Data.forEach((item) => {
+                const card = document.getElementById("t1-card-" + item.id);
+                clearMissing(card);
+                if (!task1State[item.id]) {
+                    markMissing(card);
+                    missingElements.push(card);
+                }
+            });
+
+            // 3. Task 2 (4 MC)
+            task2Data.forEach((item) => {
+                const card = document.getElementById("t2-card-" + item.id);
+                clearMissing(card);
+                if (!task2State[item.id]) {
+                    markMissing(card);
+                    missingElements.push(card);
+                }
+            });
+
+            // 4. Task 3 (4 Modals)
+            task3Data.forEach((item) => {
+                const card = document.getElementById("t3-card-" + item.id);
+                clearMissing(card);
+                if (!task3State[item.id]) {
+                    markMissing(card);
+                    missingElements.push(card);
+                }
+            });
+
+            // 5. Task 4 (3 Debrief textareas)
+            task4Data.forEach((item) => {
+                const card = document.getElementById("t4-card-" + item.id);
+                const textarea = document.getElementById("t4-input-" + item.id);
+                clearMissing(card);
+                clearMissing(textarea);
+                if (!textarea.value.trim()) {
+                    markMissing(card);
+                    markMissing(textarea);
+                    missingElements.push(textarea);
+                }
+            });
+
+            if (missingElements.length > 0) {
+                showIncompleteWarning(missingElements.length);
+                const firstMissing = missingElements[0];
+                firstMissing.scrollIntoView({ behavior: "smooth", block: "center" });
+                if (firstMissing.tagName === "INPUT" || firstMissing.tagName === "TEXTAREA") {
+                    setTimeout(() => firstMissing.focus({ preventScroll: true }), 350);
+                }
+                return false;
+            }
+
+            hideIncompleteWarning();
+            return true;
+        }
+
+        // ==========================================
+        // LOCK CONTROLS AFTER SUBMISSION
+        // ==========================================
+
+        function lockAllControls() {
+            isSubmittedAndLocked = true;
+            document.getElementById("studentName").disabled = true;
+
+            document.querySelectorAll(".t1-btn, .t2-opt, .t3-pill").forEach((btn) => {
+                btn.disabled = true;
+                btn.classList.add("cursor-not-allowed");
+            });
+
+            document.querySelectorAll(".t4-textarea").forEach((ta) => {
+                ta.disabled = true;
+                ta.classList.add("bg-slate-100", "text-slate-600", "cursor-not-allowed");
+            });
+        }
+
+        // ==========================================
+        // TELEGRAM PLAIN-TEXT SENDER (CHUNKED)
+        // ==========================================
+
+        function splitIntoChunks(text, maxLen = 3800) {
+            if (text.length <= maxLen) return [text];
+
+            const lines = text.split("\n");
+            const chunks = [];
+            let current = "";
+
+            for (const line of lines) {
+                if (line.length > maxLen) {
+                    if (current.trim()) {
+                        chunks.push(current.trim());
+                        current = "";
+                    }
+                    for (let i = 0; i < line.length; i += maxLen) {
+                        chunks.push(line.slice(i, i + maxLen));
+                    }
+                    continue;
+                }
+
+                if ((current + "\n" + line).length > maxLen) {
+                    if (current.trim()) chunks.push(current.trim());
+                    current = line;
+                } else {
+                    current = current ? current + "\n" + line : line;
+                }
+            }
+
+            if (current.trim()) chunks.push(current.trim());
+            return chunks;
+        }
+
+        async function sendPlainTextToTelegram(messageText) {
+            const chunks = splitIntoChunks(messageText, 3800);
+            const url = "https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage";
+
+            for (const chunk of chunks) {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: chunk
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok || !data.ok) {
+                    throw new Error(data.description || "Telegram API error");
+                }
+            }
+        }
+
+        // ==========================================
+        // GRADING & FORM SUBMISSION
+        // ==========================================
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById("submit-btn");
+            const submitBtnText = document.getElementById("submit-btn-text");
+            const resultBanner = document.getElementById("result-banner");
+            const resultTitle = document.getElementById("result-title");
+            const resultMessage = document.getElementById("result-message");
+
+            // If already graded & locked and Telegram succeeded, ignore duplicate submits
+            if (isSubmittedAndLocked && !lastPreparedReport) {
+                return;
+            }
+
+            // If grading hasn't run yet, validate and grade everything
+            if (!lastPreparedReport) {
+                if (!validateAll()) {
+                    return;
+                }
+
+                const studentName = document.getElementById("studentName").value.trim();
+
+                // --- Grade Task 1: True / False (6 pts) ---
+                let t1Score = 0;
+                const t1Mistakes = [];
+                task1Data.forEach((item) => {
+                    const userVal = task1State[item.id];
+                    const isCorrect = userVal === item.correct;
+                    const card = document.getElementById("t1-card-" + item.id);
+                    const fb = document.getElementById("t1-fb-" + item.id);
+
+                    setCardGradeStyle(card, isCorrect);
+                    fb.classList.remove("hidden", "text-emerald-700", "text-rose-700");
+
+                    if (isCorrect) {
+                        t1Score++;
+                        fb.classList.add("text-emerald-700");
+                        fb.textContent = "✓ Correct!";
+                    } else {
+                        const correctLabel = item.correct === "T" ? "True" : "False";
+                        const userLabel = userVal === "T" ? "True" : "False";
+                        fb.classList.add("text-rose-700");
+                        fb.textContent = "✗ Correct answer: " + correctLabel;
+                        t1Mistakes.push("  - Q" + item.id + ": " + userLabel + " (correct: " + correctLabel + ")");
+                    }
+                });
+                showScoreBadge("task1-score-badge", t1Score, task1Data.length);
+
+                // --- Grade Task 2: Multiple Choice (4 pts) ---
+                let t2Score = 0;
+                const t2Mistakes = [];
+                task2Data.forEach((item) => {
+                    const userKey = task2State[item.id];
+                    const isCorrect = userKey === item.correct;
+                    const card = document.getElementById("t2-card-" + item.id);
+                    const fb = document.getElementById("t2-fb-" + item.id);
+                    const userObj = item.options.find((o) => o.key === userKey);
+                    const correctObj = item.options.find((o) => o.key === item.correct);
+
+                    setCardGradeStyle(card, isCorrect);
+                    fb.classList.remove("hidden", "text-emerald-700", "text-rose-700");
+
+                    if (isCorrect) {
+                        t2Score++;
+                        fb.classList.add("text-emerald-700");
+                        fb.textContent = "✓ Correct!";
+                    } else {
+                        fb.classList.add("text-rose-700");
+                        fb.textContent = "✗ Correct answer: " + correctObj.key + ") " + correctObj.text;
+                        t2Mistakes.push(
+                            "  - Q" + item.id + ": " + userObj.key + ") " + userObj.text +
+                            " (correct: " + correctObj.key + ") " + correctObj.text + ")"
+                        );
+                    }
+                });
+                showScoreBadge("task2-score-badge", t2Score, task2Data.length);
+
+                // --- Grade Task 3: Modals Check (4 pts) ---
+                let t3Score = 0;
+                const t3Mistakes = [];
+                task3Data.forEach((item) => {
+                    const userWord = task3State[item.id];
+                    const isCorrect = userWord === item.correct;
+                    const card = document.getElementById("t3-card-" + item.id);
+                    const blankSlot = document.getElementById("t3-blank-" + item.id);
+                    const fb = document.getElementById("t3-fb-" + item.id);
+
+                    setCardGradeStyle(card, isCorrect);
+                    fb.classList.remove("hidden", "text-emerald-700", "text-rose-700");
+
+                    if (isCorrect) {
+                        t3Score++;
+                        blankSlot.className = "inline-flex items-center justify-center min-w-[78px] px-3 py-0.5 mx-1 rounded-lg border-2 border-emerald-600 bg-emerald-600 text-white font-extrabold text-sm align-baseline shadow-sm";
+                        fb.classList.add("text-emerald-700");
+                        fb.textContent = "✓ Correct!";
+                    } else {
+                        blankSlot.className = "inline-flex items-center justify-center min-w-[78px] px-3 py-0.5 mx-1 rounded-lg border-2 border-rose-600 bg-rose-600 text-white font-extrabold text-sm align-baseline shadow-sm";
+                        fb.classList.add("text-rose-700");
+                        fb.textContent = "✗ Correct word: " + item.correct;
+                        t3Mistakes.push("  - Q" + item.id + ': "' + userWord + '" (correct: "' + item.correct + '")');
+                    }
+                });
+                showScoreBadge("task3-score-badge", t3Score, task3Data.length);
+
+                // --- Collect Task 4: Quick Debrief ---
+                const t4Lines = task4Data.map((item) => {
+                    const val = document.getElementById("t4-input-" + item.id).value.trim();
+                    return item.id + ") " + val;
+                });
+                document.getElementById("task4-status-badge").classList.remove("hidden");
+
+                // --- Totals & Breakdown ---
+                const totalScore = t1Score + t2Score + t3Score;
+                const maxScore = task1Data.length + task2Data.length + task3Data.length;
+                const percent = Math.round((totalScore / maxScore) * 100);
+
+                document.getElementById("result-score").textContent = totalScore + " / " + maxScore;
+                document.getElementById("result-percent").textContent = percent + "%";
+
+                const breakdown = document.getElementById("result-breakdown");
+                breakdown.innerHTML = "";
+                [
+                    { label: "Task 1 (T/F)", val: t1Score + " / " + task1Data.length },
+                    { label: "Task 2 (MC)", val: t2Score + " / " + task2Data.length },
+                    { label: "Task 3 (Modals)", val: t3Score + " / " + task3Data.length },
+                    { label: "Task 4 (Debrief)", val: "Manual" }
+                ].forEach((part) => {
+                    const box = document.createElement("div");
+                    box.className = "bg-white/90 rounded-xl p-2.5 text-center border border-black/5";
+
+                    const lbl = document.createElement("div");
+                    lbl.className = "text-slate-500";
+                    lbl.textContent = part.label;
+
+                    const val = document.createElement("div");
+                    val.className = "font-bold text-slate-900 mt-0.5";
+                    val.textContent = part.val;
+
+                    box.appendChild(lbl);
+                    box.appendChild(val);
+                    breakdown.appendChild(box);
+                });
+
+                // --- Build Plain-Text Telegram Report ---
+                const reportLines = [
+                    "🕵️ Mission Briefing: Video Homework",
+                    "👤 Student: " + studentName,
+                    "🏆 Auto-Graded Score: " + totalScore + " / " + maxScore + " (" + percent + "%)",
+                    "",
+                    "1️⃣ Task 1 (True / False): " + t1Score + "/" + task1Data.length,
+                    t1Mistakes.length ? t1Mistakes.join("\n") : "  ✅ No mistakes!",
+                    "",
+                    "2️⃣ Task 2 (Multiple Choice): " + t2Score + "/" + task2Data.length,
+                    t2Mistakes.length ? t2Mistakes.join("\n") : "  ✅ No mistakes!",
+                    "",
+                    "3️⃣ Task 3 (Modals Check): " + t3Score + "/" + task3Data.length,
+                    t3Mistakes.length ? t3Mistakes.join("\n") : "  ✅ No mistakes!",
+                    "",
+                    "🎙️ Task 4 (Quick Debrief — Teacher Review):",
+                    t4Lines.join("\n\n")
+                ];
+                lastPreparedReport = reportLines.join("\n");
+                lockAllControls();
+            }
+
+            // --- Send Report to Telegram ---
+            submitBtn.disabled = true;
+            submitBtnText.textContent = "Надсилаємо...";
+
+            try {
+                await sendPlainTextToTelegram(lastPreparedReport);
+                lastPreparedReport = null;
+
+                resultBanner.className = "rounded-2xl p-5 sm:p-6 border bg-emerald-50 border-emerald-300 text-emerald-950 transition-all space-y-4";
+                resultTitle.textContent = "Відправлено вчителю ✅";
+                resultMessage.textContent = "Чудова робота, агенте! Прокрути сторінку вгору, щоб переглянути свої відповіді та підказки.";
+                submitBtnText.textContent = "Відправлено вчителю ✅";
+            } catch (error) {
+                console.error("Telegram send error:", error);
+                resultBanner.className = "rounded-2xl p-5 sm:p-6 border bg-rose-50 border-rose-300 text-rose-950 transition-all space-y-4";
+                resultTitle.textContent = "Не вдалося надіслати вчителю ⚠️";
+                resultMessage.textContent = "Твої відповіді перевірено вище, але сталася помилка з'єднання. Перевір інтернет і натисни кнопку ще раз.";
+                submitBtn.disabled = false;
+                submitBtnText.textContent = "Спробувати надіслати ще раз";
+            } finally {
+                resultBanner.classList.remove("hidden");
+                resultBanner.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+        }
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. Render all 4 tasks
+            renderTask1();
+            renderTask2();
+            renderTask3();
+            renderTask4();
+
+            // 2. Grammar Help accordion toggle
+            const helpToggle = document.getElementById("grammar-help-toggle");
+            const helpPanel = document.getElementById("grammar-help-panel");
+            const helpChevron = document.getElementById("grammar-help-chevron");
+
+            helpToggle.addEventListener("click", () => {
+                const isHidden = helpPanel.classList.toggle("hidden");
+                helpToggle.setAttribute("aria-expanded", String(!isHidden));
+                helpChevron.classList.toggle("rotate-180", !isHidden);
+            });
+
+            // 3. Ukrainian Hint buttons
+            document.querySelectorAll(".hint-toggle-btn").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const targetId = btn.dataset.hintTarget;
+                    const hintBox = document.getElementById(targetId);
+                    if (hintBox) {
+                        hintBox.classList.toggle("hidden");
+                    }
+                });
+            });
+
+            // 4. Close incomplete warning toast
+            document.getElementById("close-toast-btn").addEventListener("click", () => {
+                document.getElementById("incomplete-toast").classList.add("hidden");
+            });
+
+            // 5. Clear student name error on input
+            const nameInput = document.getElementById("studentName");
+            nameInput.addEventListener("input", () => {
+                if (nameInput.value.trim()) {
+                    clearMissing(nameInput);
+                    document.getElementById("name-error").classList.add("hidden");
+                }
+            });
+
+            // 6. Auto-fill student name from URL (?name=...)
+            const params = new URLSearchParams(window.location.search);
+            const nameFromUrl = params.get("name");
+            if (nameFromUrl) {
+                nameInput.value = nameFromUrl;
+            }
+
+            // 7. Form submission handler
+            document.getElementById("homework-form").addEventListener("submit", handleSubmit);
+        });
+    </script>
+</body>
+</html>
